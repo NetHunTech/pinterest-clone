@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -53,11 +54,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button
-            className="w-full bg-black text-white p-3 rounded-xl hover:opacity-90 transition"
-          >
-            Log in
-          </button>
+          <Button variant="auth">Log in</Button>
         </form>
 
         <p className="text-center text-sm mt-4 text-gray-500">

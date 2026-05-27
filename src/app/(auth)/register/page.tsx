@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -53,9 +54,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className="w-full bg-black text-white p-3 rounded-xl">
-            Sign up
-          </button>
+          <Button variant="auth">Sign up</Button>
         </form>
 
         <p className="text-center text-sm mt-4 text-gray-500">

@@ -41,6 +41,7 @@ export default function Page() {
           pins.map((pin) => (
             <PinCard
               key={pin.id}
+              id={pin.id}
               img={pin.image_url}
               title={pin.title}
             />

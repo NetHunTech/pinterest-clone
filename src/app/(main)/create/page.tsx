@@ -43,7 +43,11 @@ export default function CreatePage() {
       }
 
       // 2. upload image to storage
-      const fileName = `${user.id}-${Date.now()}-${selectedImage.name}`;
+      const cleanFileName = selectedImage.name
+        .replace(/\s+/g, "-")
+        .replace(/[^a-zA-Z0-9.-]/g, "");
+
+      const fileName = `${user.id}-${Date.now()}-${cleanFileName}`;
 
       const { data: uploadData, error: uploadError } =
         await supabase.storage
@@ -71,9 +75,9 @@ export default function CreatePage() {
       // 5. redirect
       router.push("/");
 
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed");
+    } catch (err: any) {
+      console.error(err.message);
+      alert(err?.message || "Upload failed");
     }
   }
 

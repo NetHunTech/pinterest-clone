@@ -13,15 +13,35 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  const user = data.user;
+
+  if (!user) {
+    alert("No user returned");
+    return;
+  }
+
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .insert({
+      id: user.id,
+      username: email.split("@")[0],
     });
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+  if (profileError) {
+    console.error(profileError);
+    alert(profileError.message);
+    return;
+  }
 
     router.push("/login");
   };

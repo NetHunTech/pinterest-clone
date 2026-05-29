@@ -44,7 +44,7 @@ export default function RegisterPage() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          />
+          />          
 
           <input
             type="password"
@@ -54,7 +54,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button variant="auth">Sign up</Button>
+          <Button type="submit" variant="auth">Sign up</Button>
         </form>
 
         <p className="text-center text-sm mt-4 text-gray-500">

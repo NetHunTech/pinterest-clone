@@ -3,12 +3,15 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/Button";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function CreatePage() {
   const [title, setTitle] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
+  const router = useRouter();
+  
   function handleImageChange(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
@@ -27,17 +30,51 @@ export default function CreatePage() {
       alert("Please add a title and image.");
       return;
     }
+    
+    try {
+      // 1. get user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    console.log("UPLOAD START");
-    console.log(title);
-    console.log(selectedImage);
+      if (!user) {
+        alert("Not logged in");
+        return;
+      }
 
-    /**
-     * TODO:
-     * - Upload to Supabase Storage
-     * - Save pin in database
-     * - Redirect to homepage
-     */
+      // 2. upload image to storage
+      const fileName = `${user.id}-${Date.now()}-${selectedImage.name}`;
+
+      const { data: uploadData, error: uploadError } =
+        await supabase.storage
+          .from("pins")
+          .upload(fileName, selectedImage);
+
+      if (uploadError) throw uploadError;
+
+      // 3. get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from("pins")
+        .getPublicUrl(fileName);
+
+      const imageUrl = publicUrlData.publicUrl;
+
+      // 4. insert into DB
+      const { error: insertError } = await supabase.from("pins").insert({
+        title,
+        image_url: imageUrl,
+        user_id: user.id,
+      });
+
+      if (insertError) throw insertError;
+
+      // 5. redirect
+      router.push("/");
+
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed");
+    }
   }
 
   return (
@@ -121,6 +158,7 @@ export default function CreatePage() {
 
           {/* BUTTON */}
           <Button
+            type="submit"
             variant="auth"
             onClick={handleCreatePin}
           >

@@ -1,4 +1,5 @@
 import SearchInput from "../ui/SearchInput";
+import Link from 'next/link'
 
 export default function Navbar() {
   return (
@@ -6,16 +7,16 @@ export default function Navbar() {
       
       {/* LOGO + MENU */}
       <ul className="flex items-center gap-8 font-medium">
-        <li className="font-black text-xl">PinClone</li>
-        <li className="text-gray-700 hover:text-black cursor-pointer">Home</li>
-        <li className="text-gray-700 hover:text-black cursor-pointer">Explore</li>
+        <li><Link className="font-black text-xl" href="/">PinColne</Link></li>
+        <li><Link className="text-gray-700 hover:text-black cursor-pointer" href="/">Home</Link></li>
+        <li><Link className="text-gray-700 hover:text-black cursor-pointer" href="/explore">Explore</Link></li>
       </ul>
 
       {/* SEARCH */}
       <SearchInput />
 
       {/* PROFILE */}
-      <div className="w-10 h-10 rounded-full bg-pink-400" />
+      <Link className="w-10 h-10 rounded-full bg-pink-400" href="/profile"></Link>
     </nav>
   );
 }

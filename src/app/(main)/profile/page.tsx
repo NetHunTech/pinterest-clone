@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Image from "next/image";
+import Navbar from "@/components/layout/Navbar";
 
 type Profile = {
   id: string;
@@ -71,31 +72,34 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      
-      {/* AVATAR */}
-      <Image
-        src={avatar}
-        width={120}
-        height={120}
-        alt="avatar"
-        className="rounded-full"
-      />
+    <>
+      <Navbar />
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        
+        {/* AVATAR */}
+        <Image
+          src={avatar}
+          width={120}
+          height={120}
+          alt="avatar"
+          className="rounded-full"
+        />
 
-      {/* USERNAME */}
-      <h1 className="text-2xl font-bold">
-        {profile.username}
-      </h1>
+        {/* USERNAME */}
+        <h1 className="text-2xl font-bold">
+          {profile.username}
+        </h1>
 
-      {/* BIO */}
-      <p className="text-gray-500">
-        {profile.bio || "No bio yet"}
-      </p>
+        {/* BIO */}
+        <p className="text-gray-500">
+          {profile.bio || "No bio yet"}
+        </p>
 
-      {/* CREATED AT */}
-      <span className="text-sm text-gray-400">
-        Joined: {new Date(profile.created_at).toLocaleDateString()}
-      </span>
-    </div>
+        {/* CREATED AT */}
+        <span className="text-sm text-gray-400">
+          Joined: {new Date(profile.created_at).toLocaleDateString()}
+        </span>
+      </div>
+    </>
   );
 }

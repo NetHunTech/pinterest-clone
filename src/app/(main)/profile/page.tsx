@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
 import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
+import getUserData from "@/hooks/getUserData";
 
 type Profile = {
   id: string;
@@ -18,34 +18,17 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-
-      if (!userData.user) {
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userData.user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.log("PROFILE ERROR:", error);
-        setLoading(false);
-        return;
-      }
-
-      setProfile(data);
+    const fetchProfile = async () => {
+      const userData = await getUserData();
+      setProfile(userData);
       setLoading(false);
     };
 
-    getUserData();
+    fetchProfile();
+
   }, []);
 
-  // 🔥 SAFE AVATAR LOGIC (IMPORTANT FIX)
+  // SAFE AVATAR LOGIC (IMPORTANT FIX)
   const avatar =
     typeof profile?.avatar_url === "string" &&
     profile.avatar_url.startsWith("/")
@@ -74,7 +57,7 @@ export default function ProfilePage() {
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+      <div className="absolute flex min-h-screen flex-col items-center top-30 left-20 gap-4">
         
         {/* AVATAR */}
         <Image

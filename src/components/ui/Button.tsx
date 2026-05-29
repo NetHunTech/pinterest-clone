@@ -18,7 +18,7 @@ export default function Button({
     ghost: "bg-transparent text-white hover:bg-white/10",
     remove: "bg-red-500 text-white hover:bg-red-600 px-3 py-1 rounded-full text-sm",
     save: "absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover:opacity-100 transition cursor-pointer",
-    saved: "absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full text-sm cursor-pointer",
+    saved: "absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover:opacity-100 cursor-pointer",
     auth: "w-full bg-black text-white p-3 rounded-xl hover:opacity-90 transition cursor-pointer"
   };
 

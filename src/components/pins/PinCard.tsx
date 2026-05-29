@@ -1,6 +1,12 @@
 import Button from "../ui/Button";
 
-export default function PinCard({ img }: { img: string }) {
+export default function PinCard({
+  img,
+  title,
+}: {
+  img: string;
+  title?: string;
+}) {
   return (
     <div className="relative break-inside-avoid group cursor-pointer overflow-hidden rounded-xl bg-white shadow-sm">
       
@@ -8,7 +14,6 @@ export default function PinCard({ img }: { img: string }) {
       <img
         className="w-full object-cover group-hover:scale-105 transition duration-300"
         src={img}
-        alt=""
       />
 
       {/* OVERLAY */}
@@ -21,7 +26,7 @@ export default function PinCard({ img }: { img: string }) {
 
         {/* TEXT */}
         <div className="absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100 transition">
-          <h1 className="font-bold text-sm">Title</h1>
+          <h1 className="font-bold text-sm">{title}</h1>
           <h2 className="text-xs opacity-80">Author</h2>
         </div>
 

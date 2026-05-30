@@ -41,6 +41,7 @@ export default function Navbar() {
         <li><Link className="font-black text-xl" href="/">PinColne</Link></li>
         <li><Link className="text-gray-700 hover:text-black cursor-pointer" href="/">Home</Link></li>
         <li><Link className="text-gray-700 hover:text-black cursor-pointer" href="/explore">Explore</Link></li>
+        <li><Link className="text-gray-700 hover:text-black cursor-pointer" href="/create">Create</Link></li>
       </ul>
 
       {/* SEARCH */}

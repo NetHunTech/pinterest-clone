@@ -10,7 +10,7 @@ export type Profile = {
   created_at: string;
 };
 
-export default async function getUserData(): Promise<Profile | null> {
+export default async function useAllUsers(): Promise<Profile[] | null> {
   const { data: userData, error: userError } =
     await supabase.auth.getUser();
 
@@ -22,8 +22,10 @@ export default async function getUserData(): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", userData.user.id)
-    .maybeSingle();
+    .neq(
+      'id',
+      userData.user.id,
+    )
 
   if (error) {
     console.log("PROFILE ERROR:", error);
@@ -32,5 +34,5 @@ export default async function getUserData(): Promise<Profile | null> {
 
   if (!data) return null;
 
-  return data as Profile;
+  return data;
 }

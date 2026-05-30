@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
-import getUserData from "@/hooks/getUserData";
+import useUserData from "@/hooks/useUserData";
+import useAllUsers from "@/hooks/useAllUsers";
 
 type Profile = {
   id: string;
@@ -15,12 +16,47 @@ type Profile = {
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [otherUsers, otherAllUsers] = useState<Profile[] | null>(null)
   const [loading, setLoading] = useState(true);
+
+  const renderAllUser = otherUsers?.map((user) => {
+    const avatar =
+    typeof user?.avatar_url === "string" &&
+    user.avatar_url.startsWith("/")
+      ? user.avatar_url
+      : typeof user?.avatar_url === "string" &&
+        user.avatar_url.startsWith("http")
+      ? user.avatar_url
+      : "/default-avatar.jpg";
+
+    return (
+      <div className="flex flex-col items-center">
+        <Image
+          src={avatar}
+          width={120}
+          height={120}
+          alt="avatar"
+          className="rounded-full object-cover"
+        />
+
+        <h1 className="text-2xl font-bold">
+          {user.username}
+        </h1>
+
+        <span className="text-sm text-gray-400">
+          Joined:{" "}
+          {new Date(user.created_at).toLocaleDateString()}
+        </span>
+      </div>
+    )
+  })
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const userData = await getUserData();
+      const userData = await useUserData();
       setProfile(userData);
+      const otherUserData = await useAllUsers()
+      otherAllUsers(otherUserData)
       setLoading(false);
     };
 
@@ -54,65 +90,73 @@ export default function ProfilePage() {
     );
   }
 
-return (
-  <>
-    <Navbar />
+  return (
+    <>
+      <Navbar />
 
-    <div className="min-h-screen grid grid-cols-[320px_1fr_320px]">
+      <div className="min-h-screen grid grid-cols-[320px_1fr_320px]">
 
-      {/* LEFT SIDEBAR */}
-      <aside className="border-r border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">
+        {/* LEFT SIDEBAR */}
+        <aside className="border-r border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">
+          <div className="flex flex-col items-center">
+            {/* AVATAR */}
+            <Image
+              src={avatar}
+              width={120}
+              height={120}
+              alt="avatar"
+              className="rounded-full object-cover"
+              />
 
-        {/* AVATAR */}
-        <Image
-          src={avatar}
-          width={120}
-          height={120}
-          alt="avatar"
-          className="rounded-full object-cover"
-        />
+            {/* USERNAME */}
+            <h1 className="text-2xl font-bold">
+              {profile.username}
+            </h1>
 
-        {/* USERNAME */}
-        <h1 className="text-2xl font-bold">
-          {profile.username}
-        </h1>
+            {/* BIO */}
+            <p className="text-gray-500 text-center">
+              {profile.bio || "No bio yet"}
+            </p>
 
-        {/* BIO */}
-        <p className="text-gray-500 text-center">
-          {profile.bio || "No bio yet"}
-        </p>
+            {/* CREATED AT */}
+            <span className="text-sm text-gray-400">
+              Joined:{" "}
+              {new Date(profile.created_at).toLocaleDateString()}
+            </span>
+          </div>
+          
+          <div>
+            
+          </div>
+        </aside>
 
-        {/* CREATED AT */}
-        <span className="text-sm text-gray-400">
-          Joined:{" "}
-          {new Date(profile.created_at).toLocaleDateString()}
-        </span>
-      </aside>
+        {/* RIGHT CONTENT */}
+        <main className="p-10">
 
-      {/* RIGHT CONTENT */}
-      <main className="p-10">
+          <h2 className="text-3xl font-bold mb-6">
+            Your Content
+          </h2>
 
-        <h2 className="text-3xl font-bold mb-6">
-          Your Content
-        </h2>
+          <div className="grid grid-cols-3 gap-6">
 
-        <div className="grid grid-cols-3 gap-6">
+            <div className="h-64 rounded-2xl bg-gray-200" />
+            <div className="h-64 rounded-2xl bg-gray-200" />
+            <div className="h-64 rounded-2xl bg-gray-200" />
+            <div className="h-64 rounded-2xl bg-gray-200" />
+            <div className="h-64 rounded-2xl bg-gray-200" />
+            <div className="h-64 rounded-2xl bg-gray-200" />
 
-          <div className="h-64 rounded-2xl bg-gray-200" />
-          <div className="h-64 rounded-2xl bg-gray-200" />
-          <div className="h-64 rounded-2xl bg-gray-200" />
-          <div className="h-64 rounded-2xl bg-gray-200" />
-          <div className="h-64 rounded-2xl bg-gray-200" />
-          <div className="h-64 rounded-2xl bg-gray-200" />
+          </div>
+        </main>
 
-        </div>
-      </main>
+        <aside className="border-l border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">
+          <h1>Profiles</h1>
+          <div className="flex flex-col items-center gap-4">
+            {renderAllUser}
+          </div>
+        </aside>
 
-      <aside className="border-l border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">
-        <h1>Profiles</h1>
-      </aside>
-
-    </div>
-  </>
-);
+      </div>
+    </>
+  );
 }

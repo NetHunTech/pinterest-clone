@@ -5,6 +5,9 @@ import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import useUserData from "@/hooks/useUserData";
 import useAllUsers from "@/hooks/useAllUsers";
+import useContent from "@/hooks/useContent";
+import PinCard from "@/components/pins/PinCard";
+import PinGrid from "@/components/pins/PinsGrid";
 
 type Profile = {
   id: string;
@@ -18,6 +21,18 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [otherUsers, otherAllUsers] = useState<Profile[] | null>(null)
   const [loading, setLoading] = useState(true);
+  const [mainContent, setMainContent] = useState<any[] | null>(null)
+  
+  const renderMainContent = mainContent?.map((content) => {
+    return (
+      <PinCard 
+        key={content.id}               
+        id={content.id}
+        img={content.image_url}
+        title={content.title}
+      />
+    )
+  })
 
   const renderAllUser = otherUsers?.map((user) => {
     const avatar =
@@ -52,15 +67,17 @@ export default function ProfilePage() {
   })
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       const userData = await useUserData();
       setProfile(userData);
       const otherUserData = await useAllUsers()
       otherAllUsers(otherUserData)
+      const mainContent = await useContent()
+      setMainContent(mainContent)
       setLoading(false);
     };
 
-    fetchProfile();
+    fetchData();
 
   }, []);
 
@@ -137,16 +154,9 @@ export default function ProfilePage() {
             Your Content
           </h2>
 
-          <div className="grid grid-cols-3 gap-6">
-
-            <div className="h-64 rounded-2xl bg-gray-200" />
-            <div className="h-64 rounded-2xl bg-gray-200" />
-            <div className="h-64 rounded-2xl bg-gray-200" />
-            <div className="h-64 rounded-2xl bg-gray-200" />
-            <div className="h-64 rounded-2xl bg-gray-200" />
-            <div className="h-64 rounded-2xl bg-gray-200" />
-
-          </div>
+          <PinGrid>
+            {renderMainContent}
+          </PinGrid>
         </main>
 
         <aside className="border-l border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">

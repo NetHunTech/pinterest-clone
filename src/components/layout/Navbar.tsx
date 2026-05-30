@@ -48,14 +48,14 @@ export default function Navbar() {
       <SearchInput />
 
       {/* PROFILE */}
-      <Link className="w-10 h-10 rounded-full bg-pink-400" href="/profile">      
-      <Image
-        src={avatar}
-        width={120}
-        height={120}
-        alt="avatar"
-        className="rounded-full"
-      />
+      <Link href="/profile">      
+        <Image
+          src={avatar}
+          width={120}
+          height={120}
+          alt="avatar"
+          className="w-10 h-10 rounded-full"
+        />
       </Link>
 
     </nav>

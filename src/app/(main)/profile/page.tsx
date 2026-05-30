@@ -54,18 +54,22 @@ export default function ProfilePage() {
     );
   }
 
-  return (
-    <>
-      <Navbar />
-      <div className="absolute flex min-h-screen flex-col items-center top-30 left-20 gap-4">
-        
+return (
+  <>
+    <Navbar />
+
+    <div className="min-h-screen grid grid-cols-[320px_1fr_320px]">
+
+      {/* LEFT SIDEBAR */}
+      <aside className="border-r border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">
+
         {/* AVATAR */}
         <Image
           src={avatar}
           width={120}
           height={120}
           alt="avatar"
-          className="rounded-full"
+          className="rounded-full object-cover"
         />
 
         {/* USERNAME */}
@@ -74,15 +78,41 @@ export default function ProfilePage() {
         </h1>
 
         {/* BIO */}
-        <p className="text-gray-500">
+        <p className="text-gray-500 text-center">
           {profile.bio || "No bio yet"}
         </p>
 
         {/* CREATED AT */}
         <span className="text-sm text-gray-400">
-          Joined: {new Date(profile.created_at).toLocaleDateString()}
+          Joined:{" "}
+          {new Date(profile.created_at).toLocaleDateString()}
         </span>
-      </div>
-    </>
-  );
+      </aside>
+
+      {/* RIGHT CONTENT */}
+      <main className="p-10">
+
+        <h2 className="text-3xl font-bold mb-6">
+          Your Content
+        </h2>
+
+        <div className="grid grid-cols-3 gap-6">
+
+          <div className="h-64 rounded-2xl bg-gray-200" />
+          <div className="h-64 rounded-2xl bg-gray-200" />
+          <div className="h-64 rounded-2xl bg-gray-200" />
+          <div className="h-64 rounded-2xl bg-gray-200" />
+          <div className="h-64 rounded-2xl bg-gray-200" />
+          <div className="h-64 rounded-2xl bg-gray-200" />
+
+        </div>
+      </main>
+
+      <aside className="border-l border-gray-300 p-8 flex flex-col items-center gap-4 sticky top-16 h-[calc(100vh-64px)]">
+        <h1>Profiles</h1>
+      </aside>
+
+    </div>
+  </>
+);
 }

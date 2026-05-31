@@ -18,11 +18,17 @@ type Profile = {
   created_at: string;
 };
 
+type Pin = {
+  id: string;
+  image_url: string;
+  title: string;
+};
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [otherUsers, otherAllUsers] = useState<Profile[] | null>(null)
+  const [otherUsers, setOtherUsers] = useState<Profile[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [mainContent, setMainContent] = useState<any[] | null>(null)
+  const [mainContent, setMainContent] = useState<Pin[] | null>(null)
   const [name, setName] = useState()
   
   const renderMainContent = mainContent?.map((content) => {
@@ -47,7 +53,7 @@ export default function ProfilePage() {
       : "/default-avatar.jpg";
 
     return (
-      <div className="flex flex-col items-center">
+      <div key={user.id} className="flex flex-col items-center">
         <Image
           src={avatar}
           width={120}
@@ -73,7 +79,7 @@ export default function ProfilePage() {
       const userData = await useUserData();
       setProfile(userData);
       const otherUserData = await useAllUsers()
-      otherAllUsers(otherUserData)
+      setOtherUsers(otherUserData)
       const mainContent = await getContent("pins")
       setMainContent(mainContent)
       setLoading(false);
@@ -147,6 +153,7 @@ export default function ProfilePage() {
           <div className="mt-10 flex flex-col items-center gap-4">
             <h2>Settings</h2>
             <Button
+              variant="auth"
               onClick={async () => {
                 const data = await getContent("pins");
                 setMainContent(data);
@@ -156,6 +163,7 @@ export default function ProfilePage() {
             </Button>
 
             <Button
+              variant="auth"
               onClick={async () => {
                 const data = await getContent("saved_pins");
                 setMainContent(data);

@@ -1,53 +1,55 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
-
 import Navbar from "@/components/layout/Navbar";
-import PinCard from "@/components/pins/PinCard";
 import PinGrid from "@/components/pins/PinsGrid";
+import PinCard from "@/components/pins/PinCard";
+import getFeedPins from "@/utils/getFeedPins";
 
-export default function Page() {
-  const [pins, setPins] = useState<any[]>([]);
+type Pin = {
+  id: string;
+  title: string;
+  image_url: string;
+};
+
+export default function HomePage() {
+  const [pins, setPins] = useState<Pin[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadPins() {
-      const { data, error } = await supabase
-        .from("pins")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setPins(data || []);
+    const loadPins = async () => {
+      const data = await getFeedPins();
+      setPins(data);
       setLoading(false);
-    }
+    };
 
     loadPins();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading feed...
+      </div>
+    );
+  }
 
   return (
     <>
       <Navbar />
 
-      <PinGrid>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          pins.map((pin) => (
+      <main className="p-6">
+        <PinGrid>
+          {pins.map((pin) => (
             <PinCard
               key={pin.id}
               id={pin.id}
               img={pin.image_url}
               title={pin.title}
             />
-          ))
-        )}
-      </PinGrid>
+          ))}
+        </PinGrid>
+      </main>
     </>
   );
 }

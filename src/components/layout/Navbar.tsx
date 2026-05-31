@@ -1,4 +1,4 @@
-import useUserData from "@/hooks/useUserData";
+import getUserData from "@/utils/getUserData";
 import SearchInput from "../ui/SearchInput";
 import Link from 'next/link';
 import Image from "next/image";
@@ -17,7 +17,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const data = await useUserData();
+      const data = await getUserData();
       setProfile(data);
     };
 

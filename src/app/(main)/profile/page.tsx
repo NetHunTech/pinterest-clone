@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import useUserData from "@/hooks/useUserData";
-import useAllUsers from "@/hooks/useAllUsers";
+import getUserData from "@/utils/getUserData";
+import getAllUsers from "@/utils/getAllUsers";
 import Navbar from "@/components/layout/Navbar";
 import PinCard from "@/components/pins/PinCard";
 import PinGrid from "@/components/pins/PinsGrid";
@@ -76,9 +76,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await useUserData();
+      const userData = await getUserData();
       setProfile(userData);
-      const otherUserData = await useAllUsers()
+      const otherUserData = await getAllUsers()
       setOtherUsers(otherUserData)
       const mainContent = await getContent("pins")
       setMainContent(mainContent)

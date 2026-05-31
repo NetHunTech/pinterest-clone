@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Navbar from "@/components/layout/Navbar";
 import useUserData from "@/hooks/useUserData";
 import useAllUsers from "@/hooks/useAllUsers";
-import useContent from "@/hooks/useContent";
+import Navbar from "@/components/layout/Navbar";
 import PinCard from "@/components/pins/PinCard";
 import PinGrid from "@/components/pins/PinsGrid";
+import Button from "@/components/ui/Button";
+import getContent from "@/utils/getContent";
 
 type Profile = {
   id: string;
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const [otherUsers, otherAllUsers] = useState<Profile[] | null>(null)
   const [loading, setLoading] = useState(true);
   const [mainContent, setMainContent] = useState<any[] | null>(null)
+  const [name, setName] = useState()
   
   const renderMainContent = mainContent?.map((content) => {
     return (
@@ -72,7 +74,7 @@ export default function ProfilePage() {
       setProfile(userData);
       const otherUserData = await useAllUsers()
       otherAllUsers(otherUserData)
-      const mainContent = await useContent()
+      const mainContent = await getContent("pins")
       setMainContent(mainContent)
       setLoading(false);
     };
@@ -141,9 +143,26 @@ export default function ProfilePage() {
               {new Date(profile.created_at).toLocaleDateString()}
             </span>
           </div>
-          
-          <div>
-            
+
+          <div className="mt-10 flex flex-col items-center gap-4">
+            <h2>Settings</h2>
+            <Button
+              onClick={async () => {
+                const data = await getContent("pins");
+                setMainContent(data);
+              }}
+            >
+              Your Pins
+            </Button>
+
+            <Button
+              onClick={async () => {
+                const data = await getContent("saved_pins");
+                setMainContent(data);
+              }}
+            >
+              Saved Pins
+            </Button>
           </div>
         </aside>
 
@@ -151,7 +170,7 @@ export default function ProfilePage() {
         <main className="p-10">
 
           <h2 className="text-3xl font-bold mb-6">
-            Your Content
+            {profile.username}'s Content
           </h2>
 
           <PinGrid>

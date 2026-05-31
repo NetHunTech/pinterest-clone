@@ -1,5 +1,3 @@
-"use client";
-
 import { supabase } from "@/lib/supabase/client";
 
 export default async function getContent(

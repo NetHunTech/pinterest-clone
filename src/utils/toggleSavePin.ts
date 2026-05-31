@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase/client";
 export default async function toggleSavePin(pinId: string) {
   const { data: userData } = await supabase.auth.getUser();
 
-  if (!userData.user) return;
+  if (!userData.user) return false;
 
   const userId = userData.user.id;
 

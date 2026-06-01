@@ -1,21 +1,15 @@
 import { supabase } from "@/lib/supabase/client";
+import isPinSaved from "./isPinSaved";
 
 export default async function toggleSavePin(pinId: string) {
   const { data: userData } = await supabase.auth.getUser();
+  const saved = await isPinSaved(pinId)
 
   if (!userData.user) return false;
 
   const userId = userData.user.id;
 
-  // check if already saved
-  const { data: existing } = await supabase
-    .from("saved_pins")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("pin_id", pinId)
-    .maybeSingle();
-
-  if (existing) {
+  if (saved) {
     // UNSAVE
     await supabase
       .from("saved_pins")

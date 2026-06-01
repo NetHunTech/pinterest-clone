@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import toggleSavePin from "@/utils/toggleSavePin";
+import isPinSaved from "@/utils/isPinSaved";
 
 type Props = {
   id: string;
@@ -11,11 +12,19 @@ type Props = {
 export default function PinCard({ id, img, title }: Props) {
   const [saved, setSaved] = useState(false);
 
-  // CHECK IF SAVED
   const handleSave = async () => {
     const result = await toggleSavePin(id);
     setSaved(result);
   };
+
+  useEffect(() => {
+    const checkSaved = async () => {
+      const result = await isPinSaved(id);
+      setSaved(result);
+    }
+
+    checkSaved()
+  }, [])
 
   return (
     <div className="relative break-inside-avoid group overflow-hidden rounded-xl bg-white shadow-sm">

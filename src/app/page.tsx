@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import PinGrid from "@/components/pins/PinsGrid";
 import PinCard from "@/components/pins/PinCard";
-import getFeedPins from "@/utils/getFeedPins";
+import getFeedPins from "@/utils/getHomeFeed";
 
 type Pin = {
   id: string;

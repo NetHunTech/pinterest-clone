@@ -14,7 +14,7 @@ export default function Button({
 
   const variants = {
     default: "bg-gray-200 text-black py-1 px-3 rounded-full border-black border-1 cursor-pointer hover:bg-gray-300 hover:border-none",
-    secondary: "bg-gray-200 text-black hover:bg-gray-300",
+    secondary: "mt-4 px-4 py-2 bg-black text-white rounded-xl cursor-pointer",
     ghost: "bg-transparent text-white hover:bg-white/10",
     remove: "bg-red-500 text-white hover:bg-red-600 px-3 py-1 rounded-full text-sm",
     save: "absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover:opacity-100 transition cursor-pointer",

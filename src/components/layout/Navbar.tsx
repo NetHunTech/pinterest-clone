@@ -48,11 +48,11 @@ export default function Navbar() {
       <SearchInput />
 
       {/* PROFILE */}
-      <Link href="/profile">      
+      <Link href={profile?.id ? `/profile/${profile.id}` : "/"}>      
         <Image
           src={avatar}
-          width={120}
-          height={120}
+          width={40}
+          height={40}
           alt="avatar"
           className="w-10 h-10 rounded-full"
         />

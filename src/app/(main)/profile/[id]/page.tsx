@@ -11,6 +11,7 @@ import Button from "@/components/ui/Button";
 import getContent from "@/utils/getContent";
 import followUser from "@/utils/followUser";
 import isFollowing from "@/utils/isFollowing";
+import getUserData from "@/utils/getUserData";
 
 type Profile = {
   id: string;
@@ -38,24 +39,16 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!id) return;
+
       const { data: userData } = await supabase.auth.getUser();
 
-      if (!userData.user) return;
-
-      setIsOwnProfile(userData.user.id === id);
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-      if (error) {
-        console.log(error);
-        return;
+      if (userData.user) {
+        setIsOwnProfile(userData.user.id === id);
       }
 
-      setProfile(data);
+      const profileData = await getUserData(id as string);
+      setProfile(profileData);
     };
 
     fetchProfile();

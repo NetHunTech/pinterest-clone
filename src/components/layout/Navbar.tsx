@@ -22,7 +22,6 @@ export default function Navbar() {
 
       if (!authData.user) return;
 
-
       const profileData = await getUserData(authData.user.id);
       setProfile(profileData);
     };

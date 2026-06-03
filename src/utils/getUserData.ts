@@ -22,5 +22,5 @@ export default async function getUserData(userId: string): Promise<Profile | nul
 
   if (!data) return null;
 
-  return data as Profile;
+  return data;
 }

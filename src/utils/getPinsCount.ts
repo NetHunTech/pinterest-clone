@@ -1,14 +1,14 @@
 import { supabase } from "@/lib/supabase/client";
 
-export default async function getFollowingCount(
+export default async function getPinsCount(
   userId: string
 ): Promise<number> {
 
   const { count, error } = await supabase
-    .from('followers')
+    .from('pins')
     .select("*", { count: "exact", head: true })
     .eq(
-      'following_id',
+      'user_id',
       userId,
     )
 

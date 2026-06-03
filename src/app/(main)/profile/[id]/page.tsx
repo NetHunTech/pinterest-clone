@@ -12,6 +12,10 @@ import getContent from "@/utils/getContent";
 import followUser from "@/utils/followUser";
 import isFollowing from "@/utils/isFollowing";
 import getUserData from "@/utils/getUserData";
+import getFollowersCount from "@/utils/getFollowersCount";
+import getFollowingCount from "@/utils/getFollowingCount";
+import getPinsCount from "@/utils/getPinsCount";
+
 
 type Profile = {
   id: string;
@@ -36,6 +40,11 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("created");
   const [content, setContent] = useState<Pin[]>([]);
   const [follow, setFollow] = useState<boolean | null>(null);
+  const [numbers, setNumbers] = useState({
+    user_pins: 0,
+    user_followers: 0,
+    user_following: 0
+  })
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,8 +78,25 @@ export default function ProfilePage() {
       setContent(pins ?? []);
     };
 
+    const fetchNumbers = async () => {
+      if (!profile) return;
+
+      const [pins, followers, following] = await Promise.all([
+        getPinsCount(profile.id),
+        getFollowersCount(profile.id),
+        getFollowingCount(profile.id),
+      ]);
+
+      setNumbers({
+        user_pins: pins,
+        user_followers: following,
+        user_following: followers,
+      });
+    };
+
     fetchPins();
     checkFollowState();
+    fetchNumbers();
   }, [profile]);
 
   const handleFollow = async () => {
@@ -117,15 +143,15 @@ export default function ProfilePage() {
 
             <div className="flex gap-8">
               <div className="flex flex-col items-center">
-                <span className="font-semibold">0</span>
+                <span className="font-semibold">{numbers.user_pins}</span>
                 <p className="text-sm">Pins</p>
               </div>
               <div className="flex flex-col items-center">
-                <span className="font-semibold">0</span>
+                <span className="font-semibold">{numbers.user_followers}</span>
                 <p className="text-sm">Followers</p>
               </div>
               <div className="flex flex-col items-center">
-                <span className="font-semibold">0</span>
+                <span className="font-semibold">{numbers.user_following}</span>
                 <p className="text-sm">Following</p>
               </div>
             </div>

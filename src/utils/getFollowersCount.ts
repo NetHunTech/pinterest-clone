@@ -2,11 +2,11 @@ import { supabase } from "@/lib/supabase/client";
 
 export default async function getFollowersCount(
   userId: string
-) {
+): Promise<number> {
 
-  const { data, error } = await supabase
+  const { count, error } = await supabase
     .from('followers')
-    .select('count()')
+    .select("*", { count: "exact", head: true })
     .eq(
       'follower_id',
       userId,
@@ -17,6 +17,6 @@ export default async function getFollowersCount(
     return 0;
   }
 
-  return data
+  return count ?? 0
 
 }

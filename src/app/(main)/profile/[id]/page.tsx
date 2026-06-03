@@ -15,7 +15,7 @@ import isFollowing from "@/utils/isFollowing";
 type Profile = {
   id: string;
   username: string;
-  avatar_url: string | null;
+  avatar_url: string;
   bio: string | null;
   created_at: string;
 };
@@ -87,15 +87,6 @@ export default function ProfilePage() {
     setFollow(updated);
   };
 
-  const avatar =
-    typeof profile?.avatar_url === "string" &&
-    profile.avatar_url.startsWith("/")
-      ? profile.avatar_url
-      : typeof profile?.avatar_url === "string" &&
-        profile.avatar_url.startsWith("http")
-      ? profile.avatar_url
-      : "/default-avatar.jpg";
-
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -111,7 +102,7 @@ export default function ProfilePage() {
       <header className="relative max-w-6xl h-40 mx-auto mt-8 py-12 flex justify-center">
         <div className="absolute top-0 left-10 flex items-center gap-5">
           <Image
-            src={avatar}
+            src={profile.avatar_url}
             width={150}
             height={150}
             alt="avatar"

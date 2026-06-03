@@ -3,30 +3,22 @@ import { supabase } from "@/lib/supabase/client";
 export type Profile = {
   id: string;
   username: string;
-  avatar_url: string | null;
+  avatar_url: string;
   bio: string | null;
   created_at: string;
 };
 
-export default async function useUserData(): Promise<Profile | null> {
-  const { data: userData, error: userError } =
-    await supabase.auth.getUser();
-
-  if (userError || !userData.user) {
-    console.log("AUTH ERROR:", userError);
-    return null;
-  }
-
+export default async function getUserData(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", userData.user.id)
-    .maybeSingle();
+    .eq("id", userId)
+    .single();
 
   if (error) {
-    console.log("PROFILE ERROR:", error);
+    console.log(error);
     return null;
-  }
+  } 
 
   if (!data) return null;
 

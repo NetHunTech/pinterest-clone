@@ -68,7 +68,7 @@ export default function ProfilePage() {
       const result = await isFollowing(profile.id);
       setFollow(result);
     };
-    
+
     const fetchPins = async () => {
       if (!profile) return
 

@@ -9,6 +9,8 @@ import PinCard from "@/components/pins/PinCard";
 import Navbar from "@/components/layout/Navbar";
 import Button from "@/components/ui/Button";
 import getContent from "@/utils/getContent";
+import followUser from "@/utils/followUser";
+import isFollowing from "@/utils/isFollowing";
 
 type Profile = {
   id: string;
@@ -32,6 +34,7 @@ export default function ProfilePage() {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [activeTab, setActiveTab] = useState("created");
   const [content, setContent] = useState<Pin[]>([]);
+  const [follow, setFollow] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -53,13 +56,36 @@ export default function ProfilePage() {
       }
 
       setProfile(data);
+    };
 
+    const fetchPins = async () => {
       const pins = await getContent("pins");
       setContent(pins ?? []);
     };
 
     fetchProfile();
+    fetchPins();
   }, [id]);
+
+  useEffect(() => {
+    const checkFollowState = async () => {
+      if (!profile) return;
+
+      const result = await isFollowing(profile.id);
+      setFollow(result);
+    };
+
+    checkFollowState();
+  }, [profile]);
+
+  const handleFollow = async () => {
+    if (!profile) return;
+
+    await followUser(profile.id);
+
+    const updated = await isFollowing(profile.id);
+    setFollow(updated);
+  };
 
   const avatar =
     typeof profile?.avatar_url === "string" &&
@@ -81,8 +107,9 @@ export default function ProfilePage() {
   return (
     <>
       <Navbar />
+
       <header className="relative max-w-6xl h-40 mx-auto mt-8 py-12 flex justify-center">
-        <div className="absolute top-0 left-10 flex items-center justify-space gap-5">
+        <div className="absolute top-0 left-10 flex items-center gap-5">
           <Image
             src={avatar}
             width={150}
@@ -92,9 +119,7 @@ export default function ProfilePage() {
           />
 
           <div className="flex flex-col items-start justify-center gap-2">
-            <h1 className="text-2xl font-bold">
-              {profile.username}
-            </h1>
+            <h1 className="text-2xl font-bold">{profile.username}</h1>
 
             <p className="text-gray-500">
               {profile.bio || "No bio"}
@@ -103,58 +128,89 @@ export default function ProfilePage() {
             <span className="text-sm text-gray-400">
               Joined: {new Date(profile.created_at).toLocaleDateString()}
             </span>
+
+            <div className="flex gap-8">
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">0</span>
+                <p className="text-sm">Pins</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">0</span>
+                <p className="text-sm">Followers</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">0</span>
+                <p className="text-sm">Following</p>
+              </div>
+            </div>
           </div>
         </div>
-        {isOwnProfile && (
+
+        {isOwnProfile ? (
           <div className="absolute top-0 right-10">
-            <Button variant="secondary">
-              Edit Profile
+            <Button variant="secondary">Edit Profile</Button>
+          </div>
+        ) : (
+          <div className="absolute top-0 right-10">
+            <Button variant="secondary" onClick={handleFollow}>
+              {follow === null ? "Loading..." : follow ? "Following" : "Follow"}
             </Button>
           </div>
         )}
       </header>
 
-      <div className="max-w-6xl my-10 mx-auto pb-2 flex flex-col justify-around items-center ">
+      <div className="max-w-6xl my-10 mx-auto pb-2 flex flex-col items-center">
         <div className="flex justify-between items-center gap-30">
-          <button 
-              className={activeTab === "created" ? "font-semibold border-b-2 border-red-800 pb-2" : "cursor-pointer pb-2"} 
-              onClick={ async () => {
-                setActiveTab("created")
+          <button
+            className={
+              activeTab === "created"
+                ? "font-semibold border-b-2 border-red-800 pb-2"
+                : "cursor-pointer pb-2"
+            }
+            onClick={async () => {
+              setActiveTab("created");
+              const pins = await getContent("pins");
+              setContent(pins ?? []);
+            }}
+          >
+            Pins
+          </button>
 
-                const pins = await getContent("pins");
+          {isOwnProfile && (
+            <button
+              className={
+                activeTab === "saved"
+                  ? "font-semibold border-b-2 border-red-800 pb-2"
+                  : "cursor-pointer pb-2"
+              }
+              onClick={async () => {
+                setActiveTab("saved");
+                const pins = await getContent("saved_pins");
                 setContent(pins ?? []);
               }}
             >
-            Pins
-          </button>
-          { isOwnProfile &&  
-            <button 
-                className={activeTab === "saved" ? "font-semibold border-b-2 border-red-800 pb-2" : "cursor-pointer pb-2"} 
-                onClick={ async () => {
-                  setActiveTab("saved")
-
-                  const pins = await getContent("saved_pins");
-                  setContent(pins ?? []);
-                }}
-              >
               Saved
             </button>
-          }
-          <button 
-            className={activeTab === "about" ? "font-semibold border-b-2 border-red-800 pb-2" : "cursor-pointer pb-2"} 
-            onClick={() => {
-              setActiveTab("about")
-            }}
+          )}
+
+          <button
+            className={
+              activeTab === "about"
+                ? "font-semibold border-b-2 border-red-800 pb-2"
+                : "cursor-pointer pb-2"
+            }
+            onClick={() => setActiveTab("about")}
           >
             About
           </button>
         </div>
-        <div className="w-300 border-b-1 border-gray-300"></div>
+
+        <div className="w-300 border-b border-gray-300" />
       </div>
 
       <main className="max-w-6xl mx-auto flex justify-center items-center">
         <PinGrid>
-          {content.map((pin: Pin) => (
+          {content.map((pin) => (
             <PinCard
               key={pin.id}
               id={pin.id}

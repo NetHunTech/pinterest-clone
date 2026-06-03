@@ -58,15 +58,7 @@ export default function ProfilePage() {
       setProfile(data);
     };
 
-    const fetchPins = async () => {
-      if (!profile) return
-
-      const pins = await getContent("pins", profile.id);
-      setContent(pins ?? []);
-    };
-
     fetchProfile();
-    fetchPins();
   }, [id]);
 
   useEffect(() => {
@@ -76,7 +68,15 @@ export default function ProfilePage() {
       const result = await isFollowing(profile.id);
       setFollow(result);
     };
+    
+    const fetchPins = async () => {
+      if (!profile) return
 
+      const pins = await getContent("pins", profile.id);
+      setContent(pins ?? []);
+    };
+
+    fetchPins();
     checkFollowState();
   }, [profile]);
 

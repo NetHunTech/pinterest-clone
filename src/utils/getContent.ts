@@ -1,17 +1,15 @@
 import { supabase } from "@/lib/supabase/client";
 
 export default async function getContent(
-  type: "pins" | "saved_pins"
+  type: "pins" | "saved_pins",
+  userId: string
 ) {
-  const { data: userData } = await supabase.auth.getUser();
-
-  if (!userData.user) return null;
 
   if (type === "pins") {
     const { data, error } = await supabase
       .from("pins")
       .select("*")
-      .eq("user_id", userData.user.id);
+      .eq("user_id", userId);
 
     if (error) {
       console.log("PINS ERROR:", error);
@@ -27,7 +25,7 @@ export default async function getContent(
       *,
       pins (*)
     `)
-    .eq("user_id", userData.user.id);
+    .eq("user_id", userId);
   
 
   if (error) {

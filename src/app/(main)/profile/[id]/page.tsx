@@ -59,7 +59,9 @@ export default function ProfilePage() {
     };
 
     const fetchPins = async () => {
-      const pins = await getContent("pins");
+      if (!profile) return
+
+      const pins = await getContent("pins", profile.id);
       setContent(pins ?? []);
     };
 
@@ -160,7 +162,7 @@ export default function ProfilePage() {
             }
             onClick={async () => {
               setActiveTab("created");
-              const pins = await getContent("pins");
+              const pins = await getContent("pins", profile.id);
               setContent(pins ?? []);
             }}
           >
@@ -176,7 +178,7 @@ export default function ProfilePage() {
               }
               onClick={async () => {
                 setActiveTab("saved");
-                const pins = await getContent("saved_pins");
+                const pins = await getContent("saved_pins", profile.id);
                 setContent(pins ?? []);
               }}
             >

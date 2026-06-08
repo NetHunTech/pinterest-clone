@@ -1,12 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
-
-export type Profile = {
-  id: string;
-  username: string;
-  avatar_url: string | null;
-  bio: string | null;
-  created_at: string;
-};
+import { Profile } from "@/types/types";
 
 export default async function useAllUsers(): Promise<Profile[] | null> {
   const { data: userData, error: userError } =

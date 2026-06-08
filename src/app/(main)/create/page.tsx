@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 import Button from "@/components/ui/Button";
 import Navbar from "@/components/layout/Navbar";
-import { supabase } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 
 export default function CreatePage() {
   const [title, setTitle] = useState("");

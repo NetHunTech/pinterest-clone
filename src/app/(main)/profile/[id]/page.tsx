@@ -1,9 +1,10 @@
 "use client";
 
-import { supabase } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase/client";
+import { Profile, Pin } from "@/types/types";
 import PinGrid from "@/components/pins/PinsGrid";
 import PinCard from "@/components/pins/PinCard";
 import Navbar from "@/components/layout/Navbar";
@@ -15,23 +16,6 @@ import getUserData from "@/utils/getUserData";
 import getFollowersCount from "@/utils/getFollowersCount";
 import getFollowingCount from "@/utils/getFollowingCount";
 import getPinsCount from "@/utils/getPinsCount";
-
-
-type Profile = {
-  id: string;
-  username: string;
-  avatar_url: string;
-  bio: string | null;
-  created_at: string;
-};
-
-type Pin = {
-  id: string;
-  title: string;
-  image_url: string;
-  user_id: string;
-  created_at: string;
-};
 
 export default function ProfilePage() {
   const { id } = useParams();

@@ -1,12 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
-
-export type Profile = {
-  id: string;
-  username: string;
-  avatar_url: string;
-  bio: string | null;
-  created_at: string;
-};
+import { Profile } from "@/types/types";
 
 export default async function getUserData(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase

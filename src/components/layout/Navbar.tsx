@@ -1,17 +1,10 @@
-import { supabase } from "@/lib/supabase/client";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase/client";
 import getUserData from "@/utils/getUserData";
 import SearchInput from "../ui/SearchInput";
+import { Profile } from "@/types/types";
 import Link from 'next/link';
 import Image from "next/image";
-
-export type Profile = {
-  id: string;
-  username: string;
-  avatar_url: string;
-  bio: string | null;
-  created_at: string;
-};
 
 export default function Navbar() {
   const [profile, setProfile] = useState<Profile | null>(null);

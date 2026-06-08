@@ -1,16 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Pin } from "@/types/types";
 import Navbar from "@/components/layout/Navbar";
 import PinGrid from "@/components/pins/PinsGrid";
 import PinCard from "@/components/pins/PinCard";
 import getFeedPins from "@/utils/getHomeFeed";
-
-type Pin = {
-  id: string;
-  title: string;
-  image_url: string;
-};
 
 export default function HomePage() {
   const [pins, setPins] = useState<Pin[]>([]);
